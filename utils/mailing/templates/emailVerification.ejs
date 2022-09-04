@@ -1,0 +1,28 @@
+<html>
+
+<head>
+  <title>Reset Password</title>
+</head>
+<style>
+  body {
+    color: #000;
+    font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+    font-size: 16px;
+    line-height: 24px;
+  }
+</style>
+
+<body>
+  <p>Hello, <%= name %>
+  </p>
+  <p>Welcome to <%= welcomeTo %>>! Please click <a href="<%= verificationLink %>" rel="noopener noreferrer"
+        target="_blank">here</a>
+      to verify your account.
+      Alternatively, go to following address on
+      your browser:</p>
+  <p><a href="<%= verificationLink %>" rel="noopener noreferrer" target="_blank">
+      <%= verificationLink %>
+    </a></p>
+</body>
+
+</html>
