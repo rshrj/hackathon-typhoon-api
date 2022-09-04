@@ -4,6 +4,7 @@ const FuzzySearch = require('fuzzy-search');
 
 const Transaction = require('../models/Transaction');
 const User = require('../models/User');
+const Group = require('../models/Group');
 
 const {
   transactionTypes: { expense, income, transfer },
@@ -45,19 +46,35 @@ router.post('/new', auth(), async (req, res) => {
 
   //Validation
   // TODO: implement TransactionValidation
-  const { error, value } = checkError(TransactionValidation, {
-    type,
-    description,
-    amount,
-    details,
-    group
-  });
+  // const { error, value } = checkError(TransactionValidation, {
+  //   type,
+  //   description,
+  //   amount,
+  //   details,
+  //   group
+  // });
 
-  if (error) {
-    return res.status(400).json({ success: false, errors: error });
-  }
+  // if (error) {
+  //   return res.status(400).json({ success: false, errors: error });
+  // }
 
   try {
+    let g = await Group.findById(group);
+
+    if (!g || g == null || g == undefined) {
+      return res.status(401).json({
+        success: false,
+        toasts: ['Invalid group']
+      });
+    }
+
+    if (!g.members.includes(user._id)) {
+      return res.status(401).json({
+        success: false,
+        toasts: ['Invalid group']
+      });
+    }
+
     const transaction = new Transaction({
       type,
       description,
@@ -78,6 +95,7 @@ router.post('/new', auth(), async (req, res) => {
     if (err instanceof mongoose.Error.ValidationError) {
       console.log(err.message.split(':')[2]);
     }
+    console.log(err);
     return res.status(500).json({
       success: false,
       toasts: ['Server error occurred']
@@ -89,7 +107,7 @@ router.post('/new', auth(), async (req, res) => {
 // @desc    ADMIN =>  Can  fetch all listings of a user
 //          CUSTOMER => Can fetch his/her all listings.
 // @access  CUSTOMER, ADMIN
-router.get('/:groupId/transactions', auth(), async (req, res) => {
+router.get('/:groupId', auth(), async (req, res) => {
   const { user } = req;
   const { groupId } = req.params;
 

@@ -121,8 +121,34 @@ router.post('/signup', async (req, res, next) => {
 
     return res.json({
       success: true,
-      // payload: token,
+      payload: token,
       message: 'Successfully created an account. Please login'
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({
+      success: false,
+      toasts: ['Server error occurred']
+    });
+  }
+});
+
+router.get('/groups', auth(), async (req, res) => {
+  try {
+    let groups = await Group.find({ members: req.user._id });
+
+    if (!groups || groups == null || groups == undefined || groups.length < 1) {
+      return res.status(400).json({
+        success: false,
+        message: 'No groups found',
+        toasts: ['No groups found']
+      });
+    }
+
+    return res.json({
+      success: true,
+      payload: groups,
+      message: 'User groups fetched'
     });
   } catch (err) {
     console.log(err);
