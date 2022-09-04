@@ -1,3 +1,3 @@
-const Group = require('./Group');
+const Group = require("./Group");
 
 module.exports = Group;

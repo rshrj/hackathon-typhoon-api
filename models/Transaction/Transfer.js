@@ -1,14 +1,14 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const TransferSchema = new mongoose.Schema({
   from: {
     type: mongoose.SchemaTypes.ObjectId,
-    ref: 'users'
+    ref: "users",
   },
   to: {
     type: mongoose.SchemaTypes.ObjectId,
-    ref: 'users'
-  }
+    ref: "users",
+  },
 });
 
 module.exports = TransferSchema;

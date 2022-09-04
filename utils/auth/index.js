@@ -1,36 +1,26 @@
-const passport = require('passport');
+const passport = require("passport");
 
-module.exports =
-  (...roles) =>
-  (req, res, next) => {
-    passport.authenticate('jwt', { session: false }, (err, user, info) => {
-      if (err || !user) {
-        return res.status(401).json({
+module.exports = () => (req, res, next) => {
+  passport.authenticate("jwt", { session: false }, (err, user, info) => {
+    if (err || !user) {
+      return res.status(401).json({
+        success: false,
+        toasts: ["Unauthorized to access this endpoint"],
+        errors: info,
+      });
+    }
+
+    req.login(user, { session: false }, (error) => {
+      if (error) {
+        return res.status(500).json({
           success: false,
-          toasts: ['Unauthorized to access this endpoint'],
-          errors: info
+          toasts: ["Server error occured"],
         });
       }
 
-      req.login(user, { session: false }, (err) => {
-        if (err) {
-          return res.status(500).json({
-            success: false,
-            toasts: ['Server error occured']
-          });
-        }
+      return next();
+    });
 
-        const hasRole =
-          roles.length > 0 ? roles.find((role) => user.role === role) : true;
-
-        if (!hasRole) {
-          return res.status(401).json({
-            success: false,
-            toasts: ['Unauthorized to access this endpoint']
-          });
-        } else {
-          return next();
-        }
-      });
-    })(req, res, next);
-  };
+    return null;
+  })(req, res, next);
+};

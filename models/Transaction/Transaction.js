@@ -1,39 +1,39 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const {
-  transactionTypes: { expense, income, transfer }
-} = require('../../constants');
+  transactionTypes: { expense, income, transfer },
+} = require("../../constants");
 
 const TransactionSchema = new mongoose.Schema({
   type: {
     type: String,
     enum: [expense, income, transfer],
-    required: true
+    required: true,
   },
   description: {
-    type: String
+    type: String,
   },
   amount: {
     type: Number,
-    min: 0
+    min: 0,
   },
   details: {
-    type: Object
+    type: Object,
   },
   group: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'groups',
-    required: true
+    ref: "groups",
+    required: true,
   },
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'users',
-    required: true
+    ref: "users",
+    required: true,
   },
   createdAt: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
-module.exports = mongoose.model('transactions', TransactionSchema);
+module.exports = mongoose.model("transactions", TransactionSchema);

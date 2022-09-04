@@ -1,17 +1,11 @@
-const router = require('express').Router();
-const passport = require('passport');
-const jwt = require('jsonwebtoken');
-const { nanoid } = require('nanoid');
-const bcrypt = require('bcryptjs');
-const Joi = require('joi');
-const validator = require('validator');
-const config = require('config');
+const router = require("express").Router();
+const passport = require("passport");
 
-const { checkLogin, checkResetPassword } = require('../utils/validation/auth');
-const User = require('../models/User/User');
-const checkError = require('../utils/error/checkError');
+const { checkLogin } = require("../utils/validation/auth");
+const User = require("../models/User/User");
+const checkError = require("../utils/error/checkError");
 
-/* 
+/*
   All @routes
   =>   POST auth/login
   =>   POST auth/resendToken
@@ -24,11 +18,11 @@ const checkError = require('../utils/error/checkError');
 // @route   POST auth/login
 // @desc    For login
 // @access  Public
-router.post('/login', async (req, res, next) => {
+router.post("/login", async (req, res, next) => {
   const { email, password } = req.body;
-  const { error, value } = checkError(checkLogin, {
+  const { error } = checkError(checkLogin, {
     email,
-    password
+    password,
   });
 
   if (error) {
@@ -36,37 +30,37 @@ router.post('/login', async (req, res, next) => {
   }
 
   passport.authenticate(
-    'local',
+    "local",
     { session: false },
     async (err, user, info) => {
       if (err) {
         console.log(err);
         return res.status(500).json({
           success: false,
-          toasts: ['Server error occurred']
+          toasts: ["Server error occurred"],
         });
       }
       if (!user) {
         return res.status(400).json({
           success: false,
-          toasts: ['Unable to login'],
-          errors: info
+          toasts: ["Unable to login"],
+          errors: info,
         });
       }
-      req.login(user, { session: false }, (err) => {
-        if (err) {
-          console.log(err);
+      req.login(user, { session: false }, (error) => {
+        if (error) {
+          console.log(error);
           return res.status(500).json({
             success: false,
-            toasts: ['Server error occurred']
+            toasts: ["Server error occurred"],
           });
         }
 
-        User.findById(user._id, (err, user) => {
-          if (err) {
+        User.findById(user._id, (error2, user2) => {
+          if (error2) {
             return res.status(500).json({
               success: false,
-              toasts: ['Server error occurred']
+              toasts: ["Server error occurred"],
             });
           }
 
@@ -76,12 +70,15 @@ router.post('/login', async (req, res, next) => {
           return res.json({
             success: true,
             payload: token,
-            message: 'Logged in successfully'
+            message: "Logged in successfully",
           });
         });
       });
+      return null;
     }
   )(req, res, next);
+
+  return null;
 });
 
 // @route   GET auth/verify/:token

@@ -1,6 +1,6 @@
 module.exports = (method, data) => {
-  const { error, value } = method.validate(data, { abortEarly : false});
-  let message = {};
+  const { error, value } = method.validate(data, { abortEarly: false });
+  const message = {};
   if (error) {
     if (error && error.details && error.details.length !== 0) {
       error.details.forEach((e) => {
@@ -8,10 +8,9 @@ module.exports = (method, data) => {
       });
     } else {
       console.log("Something went wrong in prepareErrorMessage");
-      message["toasts"] = ["Something went wrong."];
+      message.toasts = ["Something went wrong."];
     }
     return { error: message };
-  } else {
-    return { value };
   }
+  return { value };
 };

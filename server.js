@@ -1,10 +1,11 @@
-const config = require('config');
-const express = require('express');
-const passport = require('passport');
-const cors = require('cors');
+const config = require("config");
+const express = require("express");
+const passport = require("passport");
+const cors = require("cors");
 
 // Connect to MongoDB server
-const connectDB = require('./config/db');
+const connectDB = require("./config/db");
+
 connectDB();
 
 const app = express();
@@ -13,12 +14,13 @@ const app = express();
 app.use(express.json());
 app.use(passport.initialize());
 
-require('./utils/auth/passport');
+require("./utils/auth/passport");
 
 // Log each request using morgan
-if (process.env.NODE_ENV !== 'production') {
-  const morgan = require('morgan');
-  app.use(morgan('combined'));
+if (process.env.NODE_ENV !== "production") {
+  // eslint-disable-next-line import/no-extraneous-dependencies, global-require
+  const morgan = require("morgan");
+  app.use(morgan("combined"));
 }
 
 // Enable CORS, any origin
@@ -26,7 +28,7 @@ if (process.env.NODE_ENV !== 'production') {
 app.use(cors());
 
 // Trust Reverse Proxy
-app.set('trust proxy', true);
+app.set("trust proxy", true);
 
 // Test Async error handling
 // const asyncHandler = require('./utils/error/asyncHandler');
@@ -36,18 +38,18 @@ app.set('trust proxy', true);
 // }));
 
 // Route handlers
-app.use('/api/v1/users', require('./routes/users'));
-app.use('/api/v1/auth', require('./routes/auth'));
-app.use('/api/v1/groups', require('./routes/groups'));
-app.use('/api/v1/transactions', require('./routes/transactions'));
+app.use("/api/v1/users", require("./routes/users"));
+app.use("/api/v1/auth", require("./routes/auth"));
+app.use("/api/v1/groups", require("./routes/groups"));
+app.use("/api/v1/transactions", require("./routes/transactions"));
 
-app.use('*', (req, res, next) => {
-  return res.status(404).json({
+app.use("*", (req, res) =>
+  res.status(404).json({
     success: false,
-    message: 'Page not found',
-    toasts: ['Page not found']
-  });
-});
+    message: "Page not found",
+    toasts: ["Page not found"],
+  })
+);
 
 // For Error Handling
 // app.use((err, req, res, next)=>{
@@ -56,7 +58,7 @@ app.use('*', (req, res, next) => {
 // });
 
 // Port to listen on
-const port = config.get('env.port') || 5050;
+const port = config.get("env.port") || 5050;
 
 app.listen(port, () =>
   console.log(`Hackathon-Typhoon: Express is listening on port ${port}`)
