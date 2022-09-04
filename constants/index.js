@@ -1,4 +1,4 @@
-categories = {
+const categories = {
   fnb: "FNB",
   rent: "RENT",
   transport: "TRANSPORT",
@@ -11,7 +11,7 @@ categories = {
   education: "EDUCATION",
 };
 
-transactionTypes = {
+const transactionTypes = {
   expense: "EXPENSE",
   income: "INCOME",
   transfer: "TRANSFER",

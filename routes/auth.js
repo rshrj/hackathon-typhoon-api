@@ -47,16 +47,16 @@ router.post("/login", async (req, res, next) => {
           errors: info,
         });
       }
-      req.login(user, { session: false }, (error) => {
-        if (error) {
-          console.log(error);
+      req.login(user, { session: false }, (error1) => {
+        if (error1) {
+          console.log(error1);
           return res.status(500).json({
             success: false,
             toasts: ["Server error occurred"],
           });
         }
 
-        User.findById(user._id, (error2, user2) => {
+        User.findById(user._id, (error2) => {
           if (error2) {
             return res.status(500).json({
               success: false,
@@ -73,6 +73,8 @@ router.post("/login", async (req, res, next) => {
             message: "Logged in successfully",
           });
         });
+
+        return null;
       });
       return null;
     }
